@@ -5,7 +5,7 @@ import sys
 from typing import Final
 
 import httpx
-import web
+import py3_web
 from tqdm import tqdm
 
 
@@ -54,17 +54,19 @@ class Downloader:
                 if not (file_prefix is not None and file_suffix is not None):
                     _file_name: str | None = None
                     if _file_name is None:
-                        if (content_disposition := headers.get("content-disposition")) is not None:
+                        if headers is not None and (
+                                content_disposition := headers.get("content-disposition")
+                        ) is not None:
                             m = re.match(r'attachment;fileName="(.*?)"', content_disposition)
                             if m:
                                 _file_name = m.group(1)
                                 _file_name = _file_name.replace("/", "_")
                     if _file_name is None:
-                        _file_prefix, _file_suffix = os.path.splitext(web.url.get_furl_obj(url).path.segments[-1])
+                        _file_prefix, _file_suffix = os.path.splitext(py3_web.url.get_furl_obj(url).path.segments[-1])
                         if not _file_prefix:
-                            _file_prefix = web.url.get_furl_obj(url).host
+                            _file_prefix = py3_web.url.get_furl_obj(url).host
                         if not _file_suffix:
-                            if (content_type := headers.get("content-type")) is not None:
+                            if headers is not None and (content_type := headers.get("content-type")) is not None:
                                 _file_ext = content_type_to_file_ext[content_type]
                                 _file_suffix = os.path.extsep + _file_ext
                                 _file_name = _file_prefix + _file_suffix
@@ -104,11 +106,11 @@ class Downloader:
             chunk_size: int = 64 * 1024,
             use_tqdm: bool = False
     ) -> str | None:
-        if not web.url.is_valid(url):
+        if not py3_web.url.is_valid(url):
             return None
 
         if headers is None:
-            headers = web.headers.get_default()
+            headers = py3_web.headers.get_default()
 
         try:
             with httpx.Client(timeout=None, follow_redirects=True) as client:
@@ -153,4 +155,6 @@ class Downloader:
         return file_path
 
 
-__all__ = ["Downloader"]
+__all__ = [
+    "Downloader"
+]

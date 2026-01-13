@@ -1,20 +1,17 @@
-[tool.poetry]
+[project]
 name = "py3-downloader"
-version = "0.0.2"
+version = "0.0.3"
 description = "python3 downloader"
-authors = ["mathewgeola <mathewgeola@gmail.com>"]
-license = "MIT"
+authors = [
+    {name = "mathewgeola",email = "mathewgeola@gmail.com"}
+]
 readme = "README.md"
-packages = [
-    { include = "downloader", from = "src" }
+requires-python = ">=3.12"
+dependencies = [
+    "py3-web (>=0.0.7,<0.0.8)",
+    "tqdm (>=4.67.1,<5.0.0)"
 ]
 
-[tool.poetry.dependencies]
-python = ">=3.12"
-py3-logger = "^0.0.4"
-py3-execute = "^0.0.2"
-py3-web = "^0.0.1"
-tqdm = "^4.67.1"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
